@@ -1,0 +1,27 @@
+appId: com.santtu.laskin
+---
+- launchApp
+- assertVisible: 'Laskin'
+- tapOn:
+    id: 'key-1'
+- tapOn:
+    id: 'key-2'
+- tapOn:
+    id: 'key-add'
+- tapOn:
+    id: 'key-7'
+- tapOn:
+    id: 'key-equals'
+- assertVisible: '19'
+- tapOn:
+    id: 'key-clear'
+- assertVisible: '0'
+- tapOn:
+    id: 'key-8'
+- tapOn:
+    id: 'key-divide'
+- tapOn:
+    id: 'key-0'
+- tapOn:
+    id: 'key-equals'
+- assertVisible: 'Cannot divide by zero'

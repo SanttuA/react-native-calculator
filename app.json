@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "laskin",
+    "name": "Laskin",
     "slug": "laskin",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -8,9 +8,11 @@
     "scheme": "laskin",
     "userInterfaceStyle": "automatic",
     "ios": {
+      "bundleIdentifier": "com.santtu.laskin",
       "icon": "./assets/expo.icon"
     },
     "android": {
+      "package": "com.santtu.laskin",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",

@@ -1,0 +1,6 @@
+.expo
+coverage
+dist
+node_modules
+web-build
+package-lock.json
