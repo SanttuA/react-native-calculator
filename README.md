@@ -1,56 +1,149 @@
-# Welcome to your Expo app 👋
+# Laskin
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Laskin is a small Expo calculator app with an Android-calculator-inspired interface and a unit-testable decimal arithmetic engine. The UI lives in React Native, while calculator state transitions are kept in a pure TypeScript module so behavior can be tested without rendering the app.
 
-## Get started
+## Features
 
-1. Install dependencies
+- Basic calculator operations: addition, subtraction, multiplication, and division.
+- Decimal input powered by `decimal.js` to avoid common floating-point surprises.
+- Sign toggle, percent, backspace, clear, repeated equals, and chained operations.
+- Divide-by-zero handling with a visible error state.
+- Light and dark themes based on the system color scheme.
+- Haptic feedback on native key presses.
+- Stable test IDs and accessibility labels for component and Maestro tests.
 
-   ```bash
-   npm install
-   ```
+## Tech Stack
 
-2. Start the app
+- Expo SDK 55
+- Expo Router
+- React 19 and React Native 0.83
+- TypeScript
+- Jest with `jest-expo`
+- React Native Testing Library
+- Maestro for Android smoke coverage
+- EAS Build profiles
 
-   ```bash
-   npx expo start
-   ```
+## Getting Started
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+Install dependencies:
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Start the Expo development server:
 
-### Other setup steps
+```bash
+npm start
+```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+Then open the app in an Android emulator, iOS simulator, development build, Expo Go, or web browser from the Expo CLI prompt.
 
-## Learn more
+You can also launch a platform directly:
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+npm run android
+npm run ios
+npm run web
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Project Structure
 
-## Join the community
+```text
+src/
+  app/
+    _layout.tsx              Expo Router root layout
+    index.tsx                Route entry that renders the calculator screen
+  calculator/
+    calculator-engine.ts     Pure calculator reducer, formatting, and arithmetic
+    __tests__/               Engine unit tests
+  screens/
+    calculator-screen.tsx    Calculator UI, theme colors, haptics, labels, test IDs
+    __tests__/               Render and interaction tests
+  components/                Shared template components still available to the app
+  constants/                 Theme constants
+  hooks/                     Color scheme helpers
+.maestro/
+  calculator.yml             Android smoke test flow
+```
 
-Join our community of developers creating universal apps.
+## Scripts
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+| Command                | Purpose                                          |
+| ---------------------- | ------------------------------------------------ |
+| `npm start`            | Start the Expo dev server.                       |
+| `npm run android`      | Start Expo and open Android.                     |
+| `npm run ios`          | Start Expo and open iOS.                         |
+| `npm run web`          | Start Expo for web.                              |
+| `npm run typecheck`    | Run TypeScript with `--noEmit`.                  |
+| `npm run lint`         | Run Expo ESLint.                                 |
+| `npm run format:check` | Check Prettier formatting.                       |
+| `npm run format:write` | Format the repo with Prettier.                   |
+| `npm test`             | Run Jest tests.                                  |
+| `npm run test:ci`      | Run Jest in CI mode with coverage.               |
+| `npm run check`        | Run typecheck, lint, format check, and CI tests. |
+| `npm run e2e:android`  | Run the Maestro Android smoke test.              |
+
+## Quality Checks
+
+Run the full local quality gate before handing off changes:
+
+```bash
+npm run check
+```
+
+For focused test loops while editing calculator behavior:
+
+```bash
+npm run test -- --watch
+```
+
+The calculator engine tests cover input composition, decimal precision, operator replacement, sign/backspace behavior, percentages, chained operations, repeated equals, divide-by-zero, and clearing state. The screen tests verify the display, key test IDs, basic interaction, clearing, and error rendering.
+
+## Android Smoke Test
+
+Maestro coverage is defined in `.maestro/calculator.yml` and targets the Android package:
+
+```text
+com.santtu.laskin
+```
+
+Build and install an Android app before running:
+
+```bash
+npm run e2e:android
+```
+
+The smoke flow launches the app, verifies `12 + 7 = 19`, clears the calculator, and checks the divide-by-zero error message.
+
+## Builds
+
+The app is configured in `app.json` with:
+
+- App name and slug: `Laskin` / `laskin`
+- URL scheme: `laskin`
+- iOS bundle identifier: `com.santtu.laskin`
+- Android package: `com.santtu.laskin`
+- Portrait orientation
+- Automatic light/dark user interface style
+
+EAS profiles are defined in `eas.json`:
+
+- `development`: internal development client build.
+- `preview`: internal distribution build.
+- `production`: production build with auto-incrementing versions.
+- `e2e-test`: Android APK build without credentials for Maestro runs.
+
+Example:
+
+```bash
+npx eas build --profile preview --platform android
+```
+
+## Implementation Notes
+
+- Keep calculator behavior in `src/calculator/calculator-engine.ts` so state transitions stay deterministic and easy to unit test.
+- Keep presentation, accessibility labels, test IDs, haptics, and theme colors in `src/screens/calculator-screen.tsx`.
+- Preserve existing `testID` values such as `key-1`, `key-add`, `key-equals`, `display-expression`, and `display-result`; component tests and Maestro flows depend on them.
+- Use Expo-managed installs for native modules so package versions stay aligned with the Expo SDK.
+- The UI can be Android-calculator-inspired, but it should stay original and avoid exact Google branding or copied assets.
