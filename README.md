@@ -39,6 +39,8 @@ npm start
 
 Then open the app in an Android emulator, iOS simulator, development build, Expo Go, or web browser from the Expo CLI prompt.
 
+The project Expo scripts run through `scripts/expo-no-telemetry.js`, which sets `EXPO_NO_TELEMETRY=1` before invoking the local Expo CLI.
+
 You can also launch a platform directly:
 
 ```bash
@@ -133,6 +135,8 @@ EAS profiles are defined in `eas.json`:
 - `preview`: internal distribution build.
 - `production`: production build with auto-incrementing versions.
 - `e2e-test`: Android APK build without credentials for Maestro runs.
+
+All EAS build profiles set `EXPO_NO_TELEMETRY=1`. Android builds also block `android.permission.INTERNET` because the calculator has no network feature.
 
 Example:
 
