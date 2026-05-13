@@ -13,6 +13,7 @@
     },
     "android": {
       "package": "com.santtu.laskin",
+      "blockedPermissions": ["android.permission.INTERNET"],
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/app-icon-foreground.png",
