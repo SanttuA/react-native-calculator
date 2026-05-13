@@ -1,21 +1,5 @@
 require('@testing-library/react-native/build/matchers/extend-expect');
 
-jest.mock('expo-haptics', () => ({
-  ImpactFeedbackStyle: {
-    Light: 'light',
-  },
-  NotificationFeedbackType: {
-    Success: 'success',
-  },
-  impactAsync: jest.fn(),
-  notificationAsync: jest.fn(),
-  selectionAsync: jest.fn(),
-}));
-
-jest.mock('expo-system-ui', () => ({
-  setBackgroundColorAsync: jest.fn(),
-}));
-
 jest.mock('react-native-safe-area-context', () => {
   const React = require('react');
   const { View } = require('react-native');

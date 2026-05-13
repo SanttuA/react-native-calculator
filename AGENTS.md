@@ -4,7 +4,7 @@
 
 - Expo SDK 55 app using Expo Router and TypeScript.
 - `src/app/index.tsx` renders the single calculator screen.
-- `src/screens/calculator-screen.tsx` owns presentation, accessibility labels, haptics, and theme colors.
+- `src/screens/calculator-screen.tsx` owns presentation, accessibility labels, and theme colors.
 - `src/calculator/calculator-engine.ts` owns calculator state transitions and decimal arithmetic.
 
 ## Quality Gates

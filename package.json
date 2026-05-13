@@ -4,10 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "node ./scripts/expo-no-telemetry.js start",
-    "reset-project": "node ./scripts/reset-project.js",
     "android": "node ./scripts/expo-no-telemetry.js start --android",
-    "ios": "node ./scripts/expo-no-telemetry.js start --ios",
-    "web": "node ./scripts/expo-no-telemetry.js start --web",
     "typecheck": "tsc --noEmit",
     "lint": "node ./scripts/expo-no-telemetry.js lint",
     "format:check": "prettier --check .",
@@ -15,42 +12,27 @@
     "test": "jest",
     "test:ci": "jest --ci --coverage",
     "check": "npm run typecheck && npm run lint && npm run format:check && npm run test:ci",
+    "audit:prod": "npm audit --omit=dev --audit-level=moderate",
     "e2e:android": "maestro test .maestro/calculator.yml"
   },
   "dependencies": {
-    "@react-navigation/bottom-tabs": "^7.15.5",
-    "@react-navigation/elements": "^2.9.10",
     "@react-navigation/native": "^7.1.33",
     "decimal.js": "^10.6.0",
     "expo": "~55.0.23",
-    "expo-constants": "~55.0.16",
-    "expo-device": "~55.0.16",
-    "expo-font": "~55.0.7",
-    "expo-glass-effect": "~55.0.11",
-    "expo-haptics": "~55.0.14",
-    "expo-image": "~55.0.10",
     "expo-linking": "~55.0.15",
     "expo-router": "~55.0.14",
     "expo-splash-screen": "~55.0.20",
-    "expo-status-bar": "~55.0.6",
-    "expo-symbols": "~55.0.8",
-    "expo-system-ui": "~55.0.17",
-    "expo-web-browser": "~55.0.15",
     "lucide-react-native": "^1.14.0",
     "react": "19.2.0",
-    "react-dom": "19.2.0",
     "react-native": "0.83.6",
     "react-native-gesture-handler": "~2.30.0",
-    "react-native-reanimated": "4.2.1",
     "react-native-safe-area-context": "~5.6.2",
     "react-native-screens": "~4.23.0",
-    "react-native-svg": "15.15.3",
-    "react-native-web": "~0.21.0",
-    "react-native-worklets": "0.7.4"
+    "react-native-svg": "15.15.3"
   },
   "devDependencies": {
     "@testing-library/react-native": "^13.3.3",
-    "@types/jest": "^30.0.0",
+    "@types/jest": "29.5.14",
     "@types/react": "~19.2.2",
     "eslint": "^9.39.4",
     "eslint-config-expo": "^55.0.0",
@@ -59,6 +41,9 @@
     "prettier": "^3.8.3",
     "react-test-renderer": "^19.2.0",
     "typescript": "~5.9.2"
+  },
+  "overrides": {
+    "postcss": "^8.5.10"
   },
   "private": true
 }

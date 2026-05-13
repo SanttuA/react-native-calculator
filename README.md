@@ -9,7 +9,6 @@ Laskin is a small Expo calculator app with an Android-calculator-inspired interf
 - Sign toggle, percent, backspace, clear, repeated equals, and chained operations.
 - Divide-by-zero handling with a visible error state.
 - Light and dark themes based on the system color scheme.
-- Haptic feedback on native key presses.
 - Stable test IDs and accessibility labels for component and Maestro tests.
 
 ## Tech Stack
@@ -37,16 +36,14 @@ Start the Expo development server:
 npm start
 ```
 
-Then open the app in an Android emulator, iOS simulator, development build, Expo Go, or web browser from the Expo CLI prompt.
+Then open the app in an Android emulator, Android development build, or Expo Go from the Expo CLI prompt.
 
 The project Expo scripts run through `scripts/expo-no-telemetry.js`, which sets `EXPO_NO_TELEMETRY=1` before invoking the local Expo CLI.
 
-You can also launch a platform directly:
+You can also launch Android directly:
 
 ```bash
 npm run android
-npm run ios
-npm run web
 ```
 
 ## Project Structure
@@ -60,11 +57,8 @@ src/
     calculator-engine.ts     Pure calculator reducer, formatting, and arithmetic
     __tests__/               Engine unit tests
   screens/
-    calculator-screen.tsx    Calculator UI, theme colors, haptics, labels, test IDs
+    calculator-screen.tsx    Calculator UI, theme colors, labels, test IDs
     __tests__/               Render and interaction tests
-  components/                Shared template components still available to the app
-  constants/                 Theme constants
-  hooks/                     Color scheme helpers
 .maestro/
   calculator.yml             Android smoke test flow
 ```
@@ -75,8 +69,6 @@ src/
 | ---------------------- | ------------------------------------------------ |
 | `npm start`            | Start the Expo dev server.                       |
 | `npm run android`      | Start Expo and open Android.                     |
-| `npm run ios`          | Start Expo and open iOS.                         |
-| `npm run web`          | Start Expo for web.                              |
 | `npm run typecheck`    | Run TypeScript with `--noEmit`.                  |
 | `npm run lint`         | Run Expo ESLint.                                 |
 | `npm run format:check` | Check Prettier formatting.                       |
@@ -84,6 +76,7 @@ src/
 | `npm test`             | Run Jest tests.                                  |
 | `npm run test:ci`      | Run Jest in CI mode with coverage.               |
 | `npm run check`        | Run typecheck, lint, format check, and CI tests. |
+| `npm run audit:prod`   | Audit production dependencies at moderate+.      |
 | `npm run e2e:android`  | Run the Maestro Android smoke test.              |
 
 ## Quality Checks
@@ -123,11 +116,10 @@ The smoke flow launches the app, verifies `12 + 7 = 19`, clears the calculator, 
 The app is configured in `app.json` with:
 
 - App name and slug: `Laskin` / `laskin`
-- URL scheme: `laskin`
-- iOS bundle identifier: `com.santtu.laskin`
 - Android package: `com.santtu.laskin`
+- URL scheme: `com.santtu.laskin`, required by Expo Router/Linking for production builds
 - Portrait orientation
-- Automatic light/dark user interface style
+- Android network, storage, overlay, and vibration permissions blocked for offline operation
 
 EAS profiles are defined in `eas.json`:
 
@@ -136,7 +128,7 @@ EAS profiles are defined in `eas.json`:
 - `production`: production build with auto-incrementing versions.
 - `e2e-test`: Android APK build without credentials for Maestro runs.
 
-All EAS build profiles set `EXPO_NO_TELEMETRY=1`. Android builds also block `android.permission.INTERNET` because the calculator has no network feature.
+All EAS build profiles set `EXPO_NO_TELEMETRY=1`. Android builds block network, storage, overlay, and vibration permissions, and the repo policy tests fail if web/iOS surface, OTA update config, browser/network packages, app-source network APIs, or a non-package-name URL scheme are added back.
 
 Example:
 
@@ -147,7 +139,7 @@ npx eas build --profile preview --platform android
 ## Implementation Notes
 
 - Keep calculator behavior in `src/calculator/calculator-engine.ts` so state transitions stay deterministic and easy to unit test.
-- Keep presentation, accessibility labels, test IDs, haptics, and theme colors in `src/screens/calculator-screen.tsx`.
+- Keep presentation, accessibility labels, test IDs, and theme colors in `src/screens/calculator-screen.tsx`.
 - Preserve existing `testID` values such as `key-1`, `key-add`, `key-equals`, `display-expression`, and `display-result`; component tests and Maestro flows depend on them.
 - Use Expo-managed installs for native modules so package versions stay aligned with the Expo SDK.
 - The UI can be Android-calculator-inspired, but it should stay original and avoid exact Google branding or copied assets.
