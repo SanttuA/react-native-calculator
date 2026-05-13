@@ -1,7 +1,6 @@
 import { Delete as DeleteIcon } from 'lucide-react-native';
-import React, { useEffect, useMemo, useReducer } from 'react';
+import React, { useMemo, useReducer } from 'react';
 import {
-  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -12,8 +11,6 @@ import {
   type ViewStyle,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as Haptics from 'expo-haptics';
-import * as SystemUI from 'expo-system-ui';
 
 import {
   applyCalculatorAction,
@@ -143,19 +140,7 @@ export function CalculatorScreen() {
   const styles = useMemo(() => createStyles(theme), [theme]);
   const resultText = state.error ?? formatDisplay(state.displayValue);
 
-  useEffect(() => {
-    void SystemUI.setBackgroundColorAsync(theme.background);
-  }, [theme.background]);
-
   function press(action: CalculatorAction) {
-    if (Platform.OS !== 'web') {
-      void Haptics.selectionAsync();
-    }
-
-    if (action.type === 'equals' && Platform.OS !== 'web') {
-      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    }
-
     dispatch(action);
   }
 
